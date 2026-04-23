@@ -24,7 +24,7 @@ export async function renderPdf(
     await page.setContent(mainHtml, { waitUntil: "networkidle0" });
 
     const pdf = await page.pdf({
-      format: "A4",
+      format: "letter",
       printBackground: true,
       displayHeaderFooter: true,
       headerTemplate: headerHtml,
