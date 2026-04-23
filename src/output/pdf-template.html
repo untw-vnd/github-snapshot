@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>{{repoSlug}} #{{number}}: {{title}}</title>
+	{{{styleTag}}}
+</head>
+<body>
+	<h1 class="issue-title">{{title}} <span class="issue-number">#{{number}}</span></h1>
+
+	<table class="metadata">
+		{{#metadataRows}}
+			<tr><th>{{label}}</th><td>{{value}}</td></tr>
+		{{/metadataRows}}
+	</table>
+
+	<div class="body">{{{bodyHtml}}}</div>
+
+	<hr class="body-divider">
+
+	{{#hasComments}}
+		<h2 class="comments-heading">Comments ({{commentCount}})</h2>
+		{{#comments}}
+			<section class="comment">
+				<header class="comment-meta">
+					<strong>{{author}}</strong>
+					<span class="ts">{{timestamp}}</span>
+				</header>
+				<div class="comment-body">{{{bodyHtml}}}</div>
+			</section>
+		{{/comments}}
+	{{/hasComments}}
+</body>
+</html>

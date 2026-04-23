@@ -27,5 +27,7 @@
   "secrets": {
     "required": ["GITHUB_TOKEN"]
   },
-  "rules": [{ "type": "Text", "globs": ["**/*.css"], "fallthrough": true }]
+  "rules": [
+    { "type": "Text", "globs": ["**/*.css", "**/*.html"], "fallthrough": true }
+  ]
 }

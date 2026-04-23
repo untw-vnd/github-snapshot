@@ -24,6 +24,12 @@
       }
     }
   },
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "parser": {
+      "interpolation": true
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
