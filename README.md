@@ -1,2 +1,3 @@
 # github-snapshot
-Export GitHub entites to email-able files
+
+Export GitHub entities to email-able files
