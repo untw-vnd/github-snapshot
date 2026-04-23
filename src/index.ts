@@ -8,6 +8,7 @@
  *   GET /_debug?url=...   — TEMP: dump the raw fetch as JSON
  */
 
+import { buildWorkbook, workbookFilename } from "./export/xlsx.js";
 import { makeClient } from "./github/client.js";
 import { fetchIssue, fetchProject } from "./github/queries.js";
 
@@ -117,7 +118,7 @@ function jsonResponse(data: unknown, status = 200): Response {
   });
 }
 
-async function handleExport(url: URL, _env: Env): Promise<Response> {
+async function handleExport(url: URL, env: Env): Promise<Response> {
   const target = url.searchParams.get("url");
   if (!target) return badRequest("missing ?url= parameter");
 
@@ -128,10 +129,30 @@ async function handleExport(url: URL, _env: Env): Promise<Response> {
     );
   }
 
-  return new Response(
-    `Would export project: ${ref.ownerType}/${ref.owner} #${ref.number}\n`,
-    { headers: { "content-type": "text/plain; charset=utf-8" } },
+  const client = makeClient(env.GITHUB_TOKEN);
+  const snapshot = await fetchProject(
+    client,
+    ref.ownerType,
+    ref.owner,
+    ref.number,
   );
+  if (!snapshot) {
+    return new Response("Project not found or not accessible.\n", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
+
+  const bytes = buildWorkbook(snapshot);
+  const filename = workbookFilename(snapshot);
+
+  return new Response(bytes, {
+    headers: {
+      "content-type":
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "content-disposition": `attachment; filename="${filename}"`,
+    },
+  });
 }
 
 async function handlePdf(url: URL, _env: Env): Promise<Response> {
