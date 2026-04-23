@@ -65,9 +65,9 @@ function parseGitHubUrl(input: string): GitHubRef | null {
 }
 
 function landingPage(env: Env): Response {
-  const versionId = env.CF_VERSION_METADATA.id;
-  const versionTag = env.CF_VERSION_METADATA.tag || "(no tag)";
   const { commit, branch } = BUILD_INFO;
+  const versionId = env.CF_VERSION_METADATA.id;
+  const versionTimestamp = env.CF_VERSION_METADATA.timestamp;
 
   const html = `<!doctype html>
 <html lang="en">
@@ -111,7 +111,7 @@ function landingPage(env: Env): Response {
 		<dl>
 			<dt>Commit</dt><dd>${escapeHtml(commit)} (${escapeHtml(branch)})</dd>
 			<dt>Version</dt><dd>${escapeHtml(versionId)}</dd>
-			<dt>Tag</dt><dd>${escapeHtml(versionTag)}</dd>
+			<dt>Tag</dt><dd>${escapeHtml(versionTimestamp)}</dd>
 		</dl>
 	</footer>
 </body>
