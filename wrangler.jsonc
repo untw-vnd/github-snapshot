@@ -26,5 +26,6 @@
   "preview_urls": true,
   "secrets": {
     "required": ["GITHUB_TOKEN"]
-  }
+  },
+  "rules": [{ "type": "Text", "globs": ["**/*.css"], "fallthrough": true }]
 }

@@ -11,6 +11,7 @@ import { BUILD_INFO } from "./build-info.ts";
 import { makeClient } from "./github/client.ts";
 import { fetchIssue, fetchProject } from "./github/queries.ts";
 import type { IssueSnapshot, ProjectSnapshot } from "./github/types.ts";
+import landingStyles from "./landing.css";
 import { buildPdf, pdfFilename } from "./output/pdf.ts";
 import { buildWorkbook, workbookFilename } from "./output/xlsx.ts";
 
@@ -75,19 +76,7 @@ function landingPage(env: Env): Response {
 	<meta charset="utf-8">
 	<title>github-snapshot</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<style>
-		body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; }
-		h1 { margin-bottom: 0.25rem; }
-		p.tagline { color: #666; margin-top: 0; }
-		form { margin: 2rem 0; }
-		label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
-		input[type=url] { width: 100%; padding: 0.5rem; font-size: 1rem; box-sizing: border-box; }
-		button { margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
-		footer { margin-top: 4rem; padding-top: 1rem; border-top: 1px solid #eee; color: #888; font-size: 0.85rem; font-family: ui-monospace, monospace; }
-		footer dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0; }
-		footer dt { font-weight: 600; }
-		footer dd { margin: 0; word-break: break-all; }
-	</style>
+	<style>${landingStyles}</style>
 </head>
 <body>
 	<h1>github-snapshot</h1>

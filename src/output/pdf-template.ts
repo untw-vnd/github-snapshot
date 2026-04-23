@@ -1,6 +1,7 @@
 import { marked } from "marked";
 
 import type { IssueSnapshot } from "../github/types.ts";
+import pdfStyles from "./pdf.css";
 
 export interface IssueHtml {
   /** Full <html> document for the PDF body. */
@@ -82,99 +83,6 @@ function metadataTable(snapshot: IssueSnapshot): string {
   return `<table class="metadata">${cells}</table>`;
 }
 
-const STYLES = `
-	body {
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-		font-size: 11pt;
-		line-height: 1.5;
-		color: #1f2328;
-		margin: 0;
-	}
-	h1.issue-title {
-		font-size: 20pt;
-		margin: 0 0 0.25em 0;
-		font-weight: 600;
-	}
-	.issue-number {
-		color: #59636e;
-		font-weight: 400;
-	}
-	table.metadata {
-		border-collapse: collapse;
-		margin: 1.5em 0;
-		font-size: 10pt;
-		width: 100%;
-	}
-	table.metadata th, table.metadata td {
-		text-align: left;
-		padding: 0.35em 0.75em;
-		border: 1px solid #d1d9e0;
-		vertical-align: top;
-	}
-	table.metadata th {
-		background: #f6f8fa;
-		font-weight: 600;
-		width: 8em;
-		white-space: nowrap;
-	}
-	.body, .comment-body {
-		font-size: 11pt;
-	}
-	.body p, .comment-body p { margin: 0.5em 0; }
-	.body pre, .comment-body pre {
-		background: #f6f8fa;
-		padding: 0.75em;
-		border-radius: 4px;
-		overflow-x: auto;
-		font-size: 9.5pt;
-	}
-	.body code, .comment-body code {
-		background: #f6f8fa;
-		padding: 0.1em 0.3em;
-		border-radius: 3px;
-		font-size: 9.5pt;
-	}
-	.body pre code, .comment-body pre code {
-		background: none;
-		padding: 0;
-	}
-	.body blockquote, .comment-body blockquote {
-		border-left: 3px solid #d1d9e0;
-		margin: 0.5em 0;
-		padding-left: 1em;
-		color: #59636e;
-	}
-	hr.body-divider {
-		border: none;
-		border-top: 1px solid #d1d9e0;
-		margin: 2em 0 1.5em 0;
-	}
-	h2.comments-heading {
-		font-size: 13pt;
-		margin: 1.5em 0 0.75em 0;
-		font-weight: 600;
-	}
-	section.comment {
-		border: 1px solid #d1d9e0;
-		border-radius: 4px;
-		margin: 0.75em 0;
-		page-break-inside: avoid;
-	}
-	.comment-meta {
-		background: #f6f8fa;
-		padding: 0.4em 0.75em;
-		border-bottom: 1px solid #d1d9e0;
-		font-size: 9.5pt;
-	}
-	.comment-meta .ts {
-		color: #59636e;
-		margin-left: 0.5em;
-	}
-	.comment-body {
-		padding: 0.75em;
-	}
-`;
-
 const HEADER_STYLES = `
 	font-size: 8pt;
 	font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -214,7 +122,7 @@ export function buildIssueHtml(snapshot: IssueSnapshot): IssueHtml {
 <head>
 	<meta charset="utf-8">
 	<title>${repoSlug} ${issueNum}: ${title}</title>
-	<style>${STYLES}</style>
+	<style>${pdfStyles}</style>
 </head>
 <body>
 	<h1 class="issue-title">${title} <span class="issue-number">${issueNum}</span></h1>
