@@ -160,8 +160,38 @@ async function handleDebug(url: URL, env: Env): Promise<Response> {
   if (!ref) return badRequest("unrecognized GitHub URL shape");
 
   const client = makeClient(env.GITHUB_TOKEN);
+  const raw = url.searchParams.get("raw") === "1";
 
   try {
+    // raw=1 mode: bypass our wrappers and dump the GraphQL response directly.
+    if (raw && ref.kind === "project") {
+      const data = await client(
+        `query($owner: String!, $number: Int!) {
+					organization(login: $owner) {
+						projectV2(number: $number) {
+							id
+							title
+							items(first: 10) {
+								totalCount
+								nodes {
+									id
+									type
+									content {
+										__typename
+										... on Issue { number title }
+										... on PullRequest { number title }
+										... on DraftIssue { title }
+									}
+								}
+							}
+						}
+					}
+				}`,
+        { owner: ref.owner, number: ref.number },
+      );
+      return jsonResponse(data);
+    }
+
     const result =
       ref.kind === "project"
         ? await fetchProject(client, ref.ownerType, ref.owner, ref.number)
