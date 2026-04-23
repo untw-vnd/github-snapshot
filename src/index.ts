@@ -111,7 +111,7 @@ function landingPage(env: Env): Response {
 		<dl>
 			<dt>Commit</dt><dd>${escapeHtml(commit)} (${escapeHtml(branch)})</dd>
 			<dt>Version</dt><dd>${escapeHtml(versionId)}</dd>
-			<dt>Tag</dt><dd>${escapeHtml(versionTimestamp)}</dd>
+			<dt>Timestamp</dt><dd>${escapeHtml(versionTimestamp)}</dd>
 		</dl>
 	</footer>
 </body>
