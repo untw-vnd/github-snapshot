@@ -1,6 +1,6 @@
 import { marked } from "marked";
 
-import type { IssueSnapshot } from "../github/types.js";
+import type { IssueSnapshot } from "../github/types.ts";
 
 export interface IssueHtml {
   /** Full <html> document for the PDF body. */

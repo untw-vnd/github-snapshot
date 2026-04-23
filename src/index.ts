@@ -7,12 +7,12 @@
  *   GET /pdf?url=...      — issue URL → pdf
  */
 
-import { BUILD_INFO } from "./build-info.js";
-import { makeClient } from "./github/client.js";
-import { fetchIssue, fetchProject } from "./github/queries.js";
-import type { IssueSnapshot, ProjectSnapshot } from "./github/types.js";
-import { buildPdf, pdfFilename } from "./output/pdf.js";
-import { buildWorkbook, workbookFilename } from "./output/xlsx.js";
+import { BUILD_INFO } from "./build-info.ts";
+import { makeClient } from "./github/client.ts";
+import { fetchIssue, fetchProject } from "./github/queries.ts";
+import type { IssueSnapshot, ProjectSnapshot } from "./github/types.ts";
+import { buildPdf, pdfFilename } from "./output/pdf.ts";
+import { buildWorkbook, workbookFilename } from "./output/xlsx.ts";
 
 type ProjectRef = {
   kind: "project";

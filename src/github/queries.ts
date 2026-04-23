@@ -6,7 +6,7 @@ import type {
   IssueSnapshot,
   ProjectItem,
   ProjectSnapshot,
-} from "./types.js";
+} from "./types.ts";
 
 const PROJECT_QUERY = /* GraphQL */ `
 	query ProjectSnapshot(
