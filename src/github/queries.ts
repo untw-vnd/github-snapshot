@@ -186,9 +186,9 @@ function extractFieldValue(
   }
 }
 
-/** Map a raw API item to our domain type. Returns null for non-issues. */
+/** Map a raw API item to our domain type. Returns null only for items with no content. */
 function toProjectItem(raw: RawProjectItem): ProjectItem | null {
-  if (raw.type !== "ISSUE" || !raw.content) return null;
+  if (!raw.content) return null;
 
   const fields: Record<string, FieldValue> = {};
   for (const rawValue of raw.fieldValues.nodes) {
@@ -196,16 +196,17 @@ function toProjectItem(raw: RawProjectItem): ProjectItem | null {
     if (entry) fields[entry[0]] = entry[1];
   }
 
+  // TEMP: cast whatever we see so we can debug. Will re-tighten to issues only.
+  const contentType = raw.content.__typename as ProjectItem["contentType"];
+
   return {
     id: raw.id,
-    contentType: "Issue",
+    contentType,
     number: raw.content.number ?? null,
     title: raw.content.title ?? "",
     url: raw.content.url ?? null,
     state: raw.content.state ?? null,
     repository: raw.content.repository?.nameWithOwner ?? null,
-    // These come from the issue itself, not the project field values.
-    // We're not querying them yet — see TODO below.
     assignees: [],
     labels: [],
     milestone: null,
