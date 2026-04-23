@@ -11,6 +11,7 @@
 import { buildWorkbook, workbookFilename } from "./export/xlsx.js";
 import { makeClient } from "./github/client.js";
 import { fetchIssue, fetchProject } from "./github/queries.js";
+import { pdfFilename, renderPdf } from "./render/pdf.js";
 
 type ProjectRef = {
   kind: "project";
@@ -155,7 +156,7 @@ async function handleExport(url: URL, env: Env): Promise<Response> {
   });
 }
 
-async function handlePdf(url: URL, _env: Env): Promise<Response> {
+async function handlePdf(url: URL, env: Env): Promise<Response> {
   const target = url.searchParams.get("url");
   if (!target) return badRequest("missing ?url= parameter");
 
@@ -166,10 +167,24 @@ async function handlePdf(url: URL, _env: Env): Promise<Response> {
     );
   }
 
-  return new Response(
-    `Would render issue: ${ref.owner}/${ref.repo} #${ref.number}\n`,
-    { headers: { "content-type": "text/plain; charset=utf-8" } },
-  );
+  const client = makeClient(env.GITHUB_TOKEN);
+  const snapshot = await fetchIssue(client, ref.owner, ref.repo, ref.number);
+  if (!snapshot) {
+    return new Response("Issue not found or not accessible.\n", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
+
+  const bytes = await renderPdf(snapshot, env.BROWSER);
+  const filename = pdfFilename(snapshot);
+
+  return new Response(bytes, {
+    headers: {
+      "content-type": "application/pdf",
+      "content-disposition": `attachment; filename="${filename}"`,
+    },
+  });
 }
 
 /** TEMP: dump the raw fetch result as JSON. Remove once xlsx + pdf work. */
