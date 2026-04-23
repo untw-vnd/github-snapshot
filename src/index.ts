@@ -92,15 +92,6 @@ function badRequest(reason: string): Response {
   });
 }
 
-/** Minimal HTML escape for safe substitution into the landing page footer. */
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 /**
  * Map an exception thrown during a GitHub fetch to a user-facing Response.
  *
