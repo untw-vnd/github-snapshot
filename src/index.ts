@@ -66,7 +66,7 @@ function parseGitHubUrl(input: string): GitHubRef | null {
 
 function landingPage(env: Env): Response {
   const versionId = env.CF_VERSION_METADATA.id;
-  const versionTimestamp = env.CF_VERSION_METADATA.timestamp;
+  const versionTag = env.CF_VERSION_METADATA.tag || "(no tag)";
   const { commit, branch } = BUILD_INFO;
 
   const html = `<!doctype html>
@@ -111,7 +111,7 @@ function landingPage(env: Env): Response {
 		<dl>
 			<dt>Commit</dt><dd>${escapeHtml(commit)} (${escapeHtml(branch)})</dd>
 			<dt>Version</dt><dd>${escapeHtml(versionId)}</dd>
-			<dt>Timestamp</dt><dd>${escapeHtml(versionTimestamp)}</dd>
+			<dt>Tag</dt><dd>${escapeHtml(versionTag)}</dd>
 		</dl>
 	</footer>
 </body>
@@ -126,6 +126,37 @@ function badRequest(reason: string): Response {
   return new Response(`Bad request: ${reason}\n`, {
     status: 400,
     headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}
+
+/** TEMP: introspect the IssueFieldValue union to figure out its actual shape. */
+async function handleSchema(env: Env): Promise<Response> {
+  const client = makeClient(env.GITHUB_TOKEN);
+  const data = await client(
+    `query {
+			__type(name: "IssueFieldValue") {
+				name
+				kind
+				possibleTypes {
+					name
+					fields {
+						name
+						type {
+							name
+							kind
+							ofType {
+								name
+								kind
+							}
+						}
+					}
+				}
+			}
+		}`,
+    {},
+  );
+  return new Response(JSON.stringify(data, null, 2), {
+    headers: { "content-type": "application/json; charset=utf-8" },
   });
 }
 
@@ -251,6 +282,8 @@ export default {
         return handleExport(url, env);
       case "/pdf":
         return handlePdf(url, env);
+      case "/_schema":
+        return handleSchema(env);
       default:
         return new Response("Not found\n", {
           status: 404,
