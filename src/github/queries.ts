@@ -84,12 +84,12 @@ const PROJECT_QUERY = /* GraphQL */ `
 						parent {
 							url
 						}
-						blockedByIssues(first: 50) {
+						blockedBy(first: 50) {
 							nodes {
 								url
 							}
 						}
-						blockingIssues(first: 50) {
+						blocking(first: 50) {
 							nodes {
 								url
 							}
@@ -208,8 +208,8 @@ interface RawProjectItem {
     milestone?: { title: string } | null;
     issueType?: { name: string } | null;
     parent?: { url: string } | null;
-    blockedByIssues?: { nodes: Array<{ url: string }> };
-    blockingIssues?: { nodes: Array<{ url: string }> };
+    blockedBy?: { nodes: Array<{ url: string }> };
+    blocking?: { nodes: Array<{ url: string }> };
     issueFieldValues?: { nodes: RawIssueFieldValue[] };
   } | null;
   fieldValues: { nodes: RawFieldValue[] };
@@ -302,8 +302,8 @@ function toProjectItem(raw: RawProjectItem): ProjectItem | null {
     milestone: raw.content.milestone?.title ?? null,
     issueType: raw.content.issueType?.name ?? null,
     parentIssue: raw.content.parent?.url ?? null,
-    blockedBy: raw.content.blockedByIssues?.nodes.map((n) => n.url) ?? [],
-    blocking: raw.content.blockingIssues?.nodes.map((n) => n.url) ?? [],
+    blockedBy: raw.content.blockedBy?.nodes.map((n) => n.url) ?? [],
+    blocking: raw.content.blocking?.nodes.map((n) => n.url) ?? [],
     createdAt: raw.content.createdAt ?? "",
     updatedAt: raw.content.updatedAt ?? "",
     closedAt: raw.content.closedAt ?? null,
@@ -422,7 +422,7 @@ const ISSUE_QUERY = /* GraphQL */ `
 				parent {
 					url
 				}
-				blockedByIssues(first: 50) {
+				blockedBy(first: 50) {
 					nodes {
 						url
 						number
@@ -433,7 +433,7 @@ const ISSUE_QUERY = /* GraphQL */ `
 						}
 					}
 				}
-				blockingIssues(first: 50) {
+				blocking(first: 50) {
 					nodes {
 						url
 						number
@@ -522,8 +522,8 @@ interface RawIssueResponse {
       milestone: { title: string } | null;
       issueType: { name: string } | null;
       parent: { url: string } | null;
-      blockedByIssues: { nodes: RawDependencyRef[] };
-      blockingIssues: { nodes: RawDependencyRef[] };
+      blockedBy: { nodes: RawDependencyRef[] };
+      blocking: { nodes: RawDependencyRef[] };
       issueFieldValues: { nodes: RawIssueFieldValue[] };
       comments: {
         pageInfo: { hasNextPage: boolean; endCursor: string | null };
@@ -621,8 +621,8 @@ export async function fetchIssue(
     milestone: issueMeta.milestone?.title ?? null,
     issueType: issueMeta.issueType?.name ?? null,
     parentIssue: issueMeta.parent?.url ?? null,
-    blockedBy: issueMeta.blockedByIssues.nodes.map(toDependencyRef),
-    blocking: issueMeta.blockingIssues.nodes.map(toDependencyRef),
+    blockedBy: issueMeta.blockedBy.nodes.map(toDependencyRef),
+    blocking: issueMeta.blocking.nodes.map(toDependencyRef),
     bodyMarkdown: issueMeta.body,
     fields,
     comments,
